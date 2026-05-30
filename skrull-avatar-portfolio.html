@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="fr" data-lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skrull Avatar — Stencil Art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #080808;
+  --deep: #0e0e0e;
+  --surface: #141414;
+  --lift: #1c1c1c;
+  --border: rgba(255,255,255,0.07);
+  --border-gold: rgba(197,160,80,0.3);
+  --gold: #c5a050;
+  --gold-light: #ddb96a;
+  --gold-pale: rgba(197,160,80,0.08);
+  --ivory: #f4ede0;
+  --ivory-dim: rgba(244,237,224,0.6);
+  --muted: rgba(244,237,224,0.35);
+  --ghost: rgba(244,237,224,0.08);
+  --red-accent: #8b2020;
+  --f-serif: 'Cormorant Garamond', Georgia, serif;
+  --f-display: 'Cinzel', serif;
+  --f-sans: 'Barlow', sans-serif;
+  --f-cond: 'Barlow Condensed', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--f-sans);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(197,160,80,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width:14px; height:14px; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width:56px; height:56px; border-color: var(--gold); }
+
+/* ── GRAIN ── */
+body::after {
+  content:'';
+  position: fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.55;
+}
+
+/* ── LANG SWITCHER ── */
+[data-lang="fr"] [data-en] { display: none !important; }
+[data-lang="en"] [data-fr] { display: none !important; }
+
+.lang-btn {
+  background: none; border: none; cursor: none;
+  font-family: var(--f-cond);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.5rem;
+  transition: color 0.2s;
+  color: var(--muted);
+}
+.lang-btn.active { color: var(--gold); }
+.lang-btn:hover { color: var(--ivory); }
+.lang-sep { color: var(--border); font-size: 0.7rem; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  z-index: 800;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 3.5rem;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.96) 0%, rgba(8,8,8,0) 100%);
+  backdrop-filter: blur(0px);
+}
+.nav-logo {
+  font-family: var(--f-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 400;
+}
+.nav-right { display:flex; align-items:center; gap:2.5rem; }
+.nav-links { display:flex; gap:2.5rem; list-style:none; }
+.nav-links a {
+  font-family: var(--f-cond);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.nav-links a:hover { color: var(--ivory); }
+.lang-group { display:flex; align-items:center; gap:0; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3.5rem 7rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-ambient {
+  position: absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 65% at 75% 35%, rgba(197,160,80,0.055) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 45% at 15% 75%, rgba(139,32,32,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 30% at 50% 50%, rgba(197,160,80,0.02) 0%, transparent 70%);
+}
+
+/* Fine grid */
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(197,160,80,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(197,160,80,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+.hero-eyebrow {
+  position: relative; z-index:2;
+  display: flex; align-items:center; gap:1.2rem;
+  font-family: var(--f-cond);
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.2s ease forwards;
+}
+.hero-eyebrow::before {
+  content:'';
+  display:inline-block;
+  width: 48px; height:1px;
+  background: linear-gradient(to right, transparent, var(--gold));
+}
+
+.hero-title {
+  position: relative; z-index:2;
+  font-family: var(--f-display);
+  font-size: clamp(4.5rem, 13vw, 12rem);
+  line-height: 0.86;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 1s 0.4s ease forwards;
+}
+.hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(197,160,80,0.45);
+  display: block;
+}
+.hero-title .solid { display: block; }
+
+.hero-rule {
+  position:relative; z-index:2;
+  width: 1px; height: 80px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 2.5rem 0;
+  opacity: 0;
+  animation: fadeUp 1s 0.6s ease forwards;
+}
+
+.hero-tagline {
+  position:relative; z-index:2;
+  font-family: var(--f-serif);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-style: italic;
+  color: var(--ivory-dim);
+  max-width: 540px;
+  line-height: 1.75;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 1s 0.8s ease forwards;
+}
+
+.hero-actions {
+  position:relative; z-index:2;
+  display:flex; gap:1.2rem; margin-top:3rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s 1s ease forwards;
+}
+
+.btn {
+  font-family: var(--f-cond);
+  font-size: 0.68rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  padding: 0.95rem 2.2rem;
+  text-decoration: none;
+  display: inline-flex; align-items:center; gap:0.7rem;
+  transition: all 0.3s; cursor: none;
+  border: none; outline: none;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+.btn-gold::after {
+  content:'';
+  position:absolute; inset:0;
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+.btn-gold:hover::after { transform: translateX(0); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ivory-dim);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: rgba(197,160,80,0.4);
+  color: var(--ivory);
+}
+
+.hero-scroll {
+  position: absolute; right:3.5rem; bottom:3rem;
+  z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:0.8rem;
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  animation: fadeUp 1s 1.2s ease forwards; opacity:0;
+}
+.hero-scroll::after {
+  content:'';
+  width:1px; height:56px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity:1; transform:scaleY(1); }
+  50% { opacity:0.3; transform:scaleY(0.4); }
+}
+
+/* ── MANIFESTO ── */
+#manifesto {
+  padding: 11rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8rem;
+  align-items: start;
+  position: relative;
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+#manifesto::before {
+  content: '"';
+  position:absolute;
+  font-family: var(--f-serif);
+  font-size: 40vw;
+  color: rgba(197,160,80,0.025);
+  top: -5rem; left: -2rem;
+  line-height:1;
+  pointer-events:none;
+  font-style: italic;
+}
+.manifesto-label {
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  position: sticky; top: 8rem;
+}
+.manifesto-label::before {
+  content:'';
+  display:block;
+  width:24px; height:1px;
+  background: var(--gold);
+  margin-bottom:1rem;
+}
+.manifesto-text {
+  font-family: var(--f-serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.55;
+  color: var(--ivory);
+  font-weight: 300;
+}
+.manifesto-text em {
+  color: var(--gold);
+  font-style: italic;
+}
+.manifesto-text .intro-large {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.3;
+  display: block;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+/* ── ARTIST ── */
+#artist {
+  padding: 10rem 3.5rem;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 7rem;
+  align-items: center;
+}
+.artist-bio-block {}
+.artist-overline {
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  display: flex; align-items:center; gap:1rem;
+}
+.artist-overline::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(to right, var(--border-gold), transparent);
+}
+.artist-name {
+  font-family: var(--f-display);
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  letter-spacing: 0.08em;
+  line-height: 0.92;
+  margin-bottom: 0.6rem;
+}
+.artist-aka {
+  font-family: var(--f-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 3rem;
+}
+.bio-para {
+  font-size: 0.97rem;
+  line-height: 1.9;
+  color: var(--ivory-dim);
+  margin-bottom: 1.4rem;
+  font-weight: 300;
+}
+.bio-para strong {
+  color: var(--ivory);
+  font-weight: 400;
+}
+.artist-ig-link {
+  display: inline-flex; align-items:center; gap:0.8rem;
+  margin-top: 2rem;
+  font-family: var(--f-cond);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: gap 0.3s, color 0.3s;
+}
+.artist-ig-link::after { content:'↗'; font-size:0.8rem; }
+.artist-ig-link:hover { gap:1.2rem; color: var(--gold-light); }
+
+.artist-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--border);
+}
+.fact-cell {
+  background: var(--surface);
+  padding: 2rem 1.5rem;
+  transition: background 0.3s;
+}
+.fact-cell:hover { background: var(--lift); }
+.fact-num {
+  font-family: var(--f-display);
+  font-size: 2.8rem;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.fact-label {
+  font-family: var(--f-cond);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+/* ── PHILOSOPHY STRIP ── */
+#philosophy {
+  padding: 8rem 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.philosophy-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+.pull-quote {
+  font-family: var(--f-serif);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.45;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ivory);
+  position: relative;
+}
+.pull-quote::before {
+  content:'"';
+  position:absolute;
+  top:-1.5rem; left:-1rem;
+  font-size: 8rem;
+  color: var(--gold-pale);
+  font-family: var(--f-serif);
+  line-height:1;
+  font-style:normal;
+}
+.pull-quote em { color: var(--gold); font-style:italic; }
+.philosophy-divider {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 3rem auto;
+}
+.technique-pills {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:0.8rem;
+  margin-top: 2rem;
+}
+.pill {
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  transition: all 0.3s;
+}
+.pill:hover {
+  background: var(--gold-pale);
+  border-color: var(--gold);
+}
+
+/* ── GALLERY ── */
+#gallery {
+  padding: 8rem 3.5rem;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+}
+.gallery-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  margin-bottom: 5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-title {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  letter-spacing: 0.08em;
+  line-height: 0.9;
+}
+.section-subtitle {
+  font-family: var(--f-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  font-weight: 300;
+}
+.gallery-note {
+  font-family: var(--f-cond);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-align: right;
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+}
+.gallery-item {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--surface);
+  cursor: none;
+}
+
+/* Stencil placeholder art */
+.artwork-canvas {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  transition: transform 0.6s ease;
+  position: relative;
+}
+.gallery-item:hover .artwork-canvas { transform: scale(1.04); }
+
+.artwork-canvas svg { opacity: 0.18; }
+
+/* Photo image support */
+.gallery-item img {
+  width:100%; height:100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover img { transform: scale(1.04); }
+
+.artwork-overlay {
+  position:absolute; inset:0;
+  background: linear-gradient(to top, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.4) 45%, transparent 100%);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding: 2rem 1.8rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.gallery-item:hover .artwork-overlay { opacity:1; }
+
+.artwork-number {
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.artwork-name {
+  font-family: var(--f-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  color: var(--ivory);
+  margin-bottom: 0.4rem;
+}
+.artwork-technique {
+  font-family: var(--f-serif);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--ivory-dim);
+  margin-bottom: 1.2rem;
+}
+.artwork-price {
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+}
+.btn-acquire {
+  font-family: var(--f-cond);
+  font-size: 0.63rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.4rem;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  cursor: none;
+  transition: background 0.25s;
+  display: inline-flex; align-items:center; gap:0.5rem;
+  width: fit-content;
+}
+.btn-acquire:hover { background: var(--gold-light); }
+
+/* Sold badge */
+.sold-badge {
+  position: absolute; top:1.2rem; right:1.2rem;
+  font-family: var(--f-cond);
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  background: var(--red-accent);
+  color: var(--ivory);
+  z-index:3;
+}
+
+/* ── PROCESS ── */
+#process {
+  padding: 10rem 3.5rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.process-bg-text {
+  position:absolute;
+  font-family: var(--f-display);
+  font-size: 22vw;
+  color: rgba(197,160,80,0.025);
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing:0.1em;
+}
+.process-header {
+  display:grid; grid-template-columns: 1fr 1fr;
+  gap:5rem; margin-bottom:7rem;
+  align-items:end;
+}
+.process-intro {
+  font-family: var(--f-serif);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  line-height: 1.85;
+  color: var(--ivory-dim);
+  font-weight: 300;
+}
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--border);
+}
+.process-step {
+  background: var(--surface);
+  padding: 2.5rem 2rem;
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.process-step::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:2px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.process-step:hover { background: var(--lift); }
+.process-step:hover::before { transform: scaleX(1); }
+.step-index {
+  font-family: var(--f-display);
+  font-size: 4rem;
+  color: rgba(197,160,80,0.12);
+  line-height:1;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s;
+}
+.process-step:hover .step-index { color: rgba(197,160,80,0.3); }
+.step-title {
+  font-family: var(--f-cond);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.step-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+/* ── COMMISSIONS ── */
+#commissions {
+  padding: 10rem 3.5rem;
+  background: var(--deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+}
+.comm-overline {
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.comm-overline::before { content:''; width:24px; height:1px; background:var(--gold); }
+.comm-title {
+  font-family: var(--f-display);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.5rem;
+}
+.comm-title span { color: var(--gold); display:block; }
+.comm-body {
+  font-family: var(--f-serif);
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--ivory-dim);
+  font-style: italic;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+.comm-steps {
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  border: 1px solid var(--border);
+}
+.comm-step {
+  display:flex; gap:1.5rem; align-items:start;
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.comm-step:last-child { border-bottom:none; }
+.comm-step:hover { background: var(--ghost); }
+.comm-step-n {
+  font-family: var(--f-display);
+  font-size: 2rem;
+  color: var(--border-gold);
+  min-width: 2rem;
+  line-height:1.1;
+  transition: color 0.3s;
+}
+.comm-step:hover .comm-step-n { color: var(--gold); }
+.comm-step-info { padding-top: 0.2rem; }
+.comm-step-title {
+  font-family: var(--f-cond);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--ivory);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.comm-step-desc {
+  font-size: 0.87rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── ACQUIRE / SHOP ── */
+#shop {
+  padding: 12rem 3.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.shop-ambient {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 60%, rgba(197,160,80,0.04) 0%, transparent 65%);
+  pointer-events: none;
+}
+.shop-bg-word {
+  position:absolute;
+  font-family: var(--f-display);
+  font-size: 28vw;
+  color: rgba(197,160,80,0.025);
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  pointer-events:none;
+  letter-spacing:0.05em;
+  white-space:nowrap;
+}
+.shop-content { position:relative; z-index:1; }
+.shop-overline {
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.shop-title {
+  font-family: var(--f-display);
+  font-size: clamp(3rem, 9vw, 9rem);
+  line-height: 0.86;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+.shop-title .dim { color: transparent; -webkit-text-stroke: 1px rgba(197,160,80,0.3); }
+.shop-serif {
+  font-family: var(--f-serif);
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-style: italic;
+  color: var(--ivory-dim);
+  max-width: 560px;
+  margin: 0 auto 4rem;
+  line-height: 1.75;
+  font-weight: 300;
+}
+.shop-paypal-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:1.5rem;
+  margin-bottom: 5rem;
+}
+.paypal-label {
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.paypal-frame {
+  border: 1px solid var(--border-gold);
+  padding: 3px;
+  transition: border-color 0.3s;
+}
+.paypal-frame:hover { border-color: var(--gold); }
+.paypal-warning {
+  font-family: var(--f-cond);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: rgba(139,32,32,0.8);
+  margin-top: 0.5rem;
+}
+
+.shop-contacts {
+  display:flex; justify-content:center; gap:3rem; flex-wrap:wrap;
+}
+.contact-link {
+  font-family: var(--f-cond);
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.25s;
+  display:flex; align-items:center; gap:0.6rem;
+}
+.contact-link::before { content:'↗'; color:var(--gold); font-size:0.7rem; }
+.contact-link:hover { color: var(--ivory); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 2.5rem 3.5rem;
+  border-top: 1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  background: var(--deep);
+}
+.footer-brand {
+  font-family: var(--f-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+.footer-copy {
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+/* ── MODAL ── */
+.modal-backdrop {
+  position:fixed; inset:0;
+  background: rgba(4,4,4,0.93);
+  z-index: 900;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.35s;
+  backdrop-filter: blur(10px);
+}
+.modal-backdrop.open { opacity:1; pointer-events:all; }
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  max-width: 520px; width: 90%;
+  padding: 3rem;
+  position:relative;
+  transform: translateY(24px) scale(0.98);
+  transition: transform 0.35s ease;
+}
+.modal-backdrop.open .modal-box { transform: translateY(0) scale(1); }
+.modal-close-btn {
+  position:absolute; top:1.2rem; right:1.4rem;
+  background:none; border:none;
+  font-family: var(--f-cond);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  cursor: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.modal-close-btn:hover { color: var(--ivory); }
+.modal-artwork-label {
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.modal-artwork-name {
+  font-family: var(--f-display);
+  font-size: 2.5rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.modal-technique {
+  font-family: var(--f-serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--ivory-dim);
+  margin-bottom: 1.5rem;
+}
+.modal-description {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+.modal-price {
+  font-family: var(--f-display);
+  font-size: 3rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 2rem;
+}
+.modal-rule { border:none; border-top:1px solid var(--border); margin-bottom:1.8rem; }
+.modal-pp-label {
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.modal-note {
+  margin-top: 1rem;
+  font-family: var(--f-cond);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.reveal {
+  opacity:0;
+  transform: translateY(32px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.22s; }
+.reveal-delay-3 { transition-delay: 0.34s; }
+.reveal-delay-4 { transition-delay: 0.46s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 1.2rem 2rem; }
+  .nav-links { display:none; }
+  #hero { padding: 0 2rem 6rem; }
+  #manifesto { grid-template-columns:1fr; gap:3rem; padding:7rem 2rem; }
+  .manifesto-label { position:static; }
+  #artist { grid-template-columns:1fr; gap:4rem; padding:7rem 2rem; }
+  #philosophy { padding:6rem 2rem; }
+  #gallery { padding:6rem 2rem; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .process-header { grid-template-columns:1fr; gap:2rem; }
+  #process { padding:7rem 2rem; }
+  #commissions { grid-template-columns:1fr; gap:4rem; padding:7rem 2rem; }
+  #shop { padding:8rem 2rem; }
+  footer { flex-direction:column; gap:1rem; text-align:center; padding:2rem; }
+}
+@media (max-width: 580px) {
+  .gallery-grid { grid-template-columns:1fr; }
+  .process-steps { grid-template-columns:1fr; }
+  .artist-facts { grid-template-columns:1fr 1fr; }
+  #hero { padding: 0 1.5rem 5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">Skrull Avatar</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#artist"><span data-fr>L'artiste</span><span data-en>The Artist</span></a></li>
+      <li><a href="#gallery"><span data-fr>Œuvres</span><span data-en>Works</span></a></li>
+      <li><a href="#commissions"><span data-fr>Commandes</span><span data-en>Commissions</span></a></li>
+      <li><a href="#shop"><span data-fr>Acquérir</span><span data-en>Shop</span></a></li>
+    </ul>
+    <div class="lang-group">
+      <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+      <span class="lang-sep">/</span>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-ambient"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">
+    <span data-fr>Pochoir · Street Art · Paris · Depuis 2018</span>
+    <span data-en>Stencil Art · Street Art · Paris · Since 2018</span>
+  </div>
+  <h1 class="hero-title">
+    <span class="solid">SKRULL</span>
+    <span class="outline">AVATAR</span>
+  </h1>
+  <div class="hero-rule"></div>
+  <p class="hero-tagline">
+    <span data-fr>Là où la lame du couteau rencontre la bombe de peinture — des œuvres uniques nées à la croisée de la pop culture, de la science-fiction et de l'exigence artisanale.</span>
+    <span data-en>Where the blade meets the spray can — singular works born at the crossroads of pop culture, science fiction, and artisan precision.</span>
+  </p>
+  <div class="hero-actions">
+    <a href="#gallery" class="btn btn-gold">
+      <span data-fr>Voir les œuvres</span>
+      <span data-en>Explore the Works</span>
+    </a>
+    <a href="#commissions" class="btn btn-ghost">
+      <span data-fr>Commander une pièce</span>
+      <span data-en>Commission a Piece</span>
+    </a>
+  </div>
+  <div class="hero-scroll">
+    <span data-fr>Découvrir</span>
+    <span data-en>Discover</span>
+  </div>
+</section>
+
+<!-- ── MANIFESTO ── -->
+<section id="manifesto">
+  <div>
+    <div class="manifesto-label">
+      <span data-fr>Manifeste</span>
+      <span data-en>Manifesto</span>
+    </div>
+  </div>
+  <div class="manifesto-text reveal">
+    <span class="intro-large">
+      <span data-fr>Ce n'est pas de la peinture.<br>C'est une <em>chirurgie visuelle.</em></span>
+      <span data-en>This isn't painting.<br>It's <em>visual surgery.</em></span>
+    </span>
+    <span data-fr>Chaque œuvre naît d'une découpe au couteau, d'une couche après l'autre, d'une précision que la main seule peut atteindre. Pas d'écran entre l'artiste et la matière. Juste <em>l'acier, la bombe et l'intention.</em></span>
+    <span data-en>Every piece is born from a blade, layer after layer, with a precision that only the hand can achieve. No screen between artist and material. Just <em>steel, spray and intent.</em></span>
+  </div>
+</section>
+
+<!-- ── ARTIST ── -->
+<section id="artist">
+  <div class="artist-bio-block">
+    <div class="artist-overline reveal">
+      <span data-fr>L'artiste</span>
+      <span data-en>The Artist</span>
+    </div>
+    <h2 class="artist-name reveal">Pierre Petit</h2>
+    <p class="artist-aka reveal">aka Skrull Avatar</p>
+
+    <p class="bio-para reveal reveal-delay-1">
+      <span data-fr>Né en 1984 en région parisienne, Pierre Petit grandit entre les planches de comics, les films de SF et les murs de la ville. <strong>Le pochoir s'impose naturellement</strong> — technique urbaine par essence, mais capable d'une précision proche de la sérigraphie.</span>
+      <span data-en>Born in 1984 in the Paris region, Pierre Petit grew up between comic books, science-fiction films and the city's walls. <strong>Stencil art came naturally</strong> — an inherently urban technique, yet capable of a precision rivalling screen printing.</span>
+    </p>
+    <p class="bio-para reveal reveal-delay-2">
+      <span data-fr>Son travail alterne entre deux directions. D'un côté, des <strong>compositions multicouches ambitieuses</strong> — parfois dix couches ou davantage — où chaque matrice apporte une nuance, construisant progressivement volumes, textures et contrastes. De l'autre, des <strong>œuvres monocouches d'une précision extrême</strong>, où la complexité tient dans la finesse de la découpe.</span>
+      <span data-en>His work alternates between two directions. On one side, <strong>ambitious multi-layer compositions</strong> — sometimes ten layers or more — where each stencil adds nuance, gradually building volumes, textures and contrasts. On the other, <strong>single-layer pieces of extreme precision</strong>, where complexity lives in the fineness of the cut.</span>
+    </p>
+    <p class="bio-para reveal reveal-delay-3">
+      <span data-fr>L'univers de Skrull Avatar est nourri par la pop culture — cinéma, manga, science-fiction. <strong>L'hybridation entre l'homme et la machine</strong> en est le fil rouge : exploration des corps transformés, des rapports entre identité, technologie et futur. Sa technique signature — les pochoirs autocollants — lui permet d'obtenir des contours particulièrement nets, un rendu graphique à mi-chemin entre l'affiche vintage et l'estampe contemporaine.</span>
+      <span data-en>Skrull Avatar's universe is fuelled by pop culture — cinema, manga, science fiction. <strong>The hybridisation between man and machine</strong> runs through it all: an exploration of transformed bodies, of the relationship between identity, technology and the future. His signature technique — self-adhesive stencils — delivers unusually sharp edges, a graphic finish halfway between vintage poster and contemporary print.</span>
+    </p>
+
+    <a href="https://www.instagram.com/skrull.avatar/" target="_blank" class="artist-ig-link reveal reveal-delay-4">
+      @skrull.avatar
+    </a>
+  </div>
+
+  <div class="artist-facts reveal">
+    <div class="fact-cell">
+      <div class="fact-num">252+</div>
+      <div class="fact-label">
+        <span data-fr>Œuvres réalisées</span>
+        <span data-en>Works created</span>
+      </div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-num">10+</div>
+      <div class="fact-label">
+        <span data-fr>Couches par pièce</span>
+        <span data-en>Layers per piece</span>
+      </div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-num">1984</div>
+      <div class="fact-label">
+        <span data-fr>Naissance, Paris</span>
+        <span data-en>Born, Paris</span>
+      </div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-num">∞</div>
+      <div class="fact-label">
+        <span data-fr>Chaque pièce unique</span>
+        <span data-en>Every piece unique</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PHILOSOPHY ── -->
+<section id="philosophy">
+  <div class="philosophy-inner">
+    <p class="pull-quote reveal">
+      <span data-fr>Entre culture populaire, esthétique urbaine et exigence technique — un langage visuel où <em>la précision du pochoir rencontre un imaginaire nourri par la science-fiction.</em></span>
+      <span data-en>Between popular culture, urban aesthetics and technical rigour — a visual language where <em>the precision of the stencil meets an imagination shaped by science fiction.</em></span>
+    </p>
+    <div class="philosophy-divider"></div>
+    <div class="technique-pills reveal">
+      <span class="pill">Pochoir / Stencil</span>
+      <span class="pill">Pop Culture</span>
+      <span class="pill">Science-Fiction</span>
+      <span class="pill">
+        <span data-fr>Multicouche</span>
+        <span data-en>Multi-layer</span>
+      </span>
+      <span class="pill">
+        <span data-fr>Pièces uniques</span>
+        <span data-en>Unique pieces</span>
+      </span>
+      <span class="pill">
+        <span data-fr>Hybridation</span>
+        <span data-en>Hybridisation</span>
+      </span>
+      <span class="pill">Street Art · Paris</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="gallery-header">
+    <div>
+      <h2 class="section-title reveal">
+        <span data-fr>Œuvres<br>disponibles</span>
+        <span data-en>Available<br>Works</span>
+      </h2>
+      <p class="section-subtitle reveal reveal-delay-1">
+        <span data-fr>Chaque pièce est unique — signée, certifiée, livrée en main propre ou par coursier.</span>
+        <span data-en>Every piece is one-of-a-kind — signed, certified, delivered with care.</span>
+      </p>
+    </div>
+    <div class="gallery-note reveal">
+      <span data-fr>Cliquez sur une<br>œuvre pour acquérir</span>
+      <span data-en>Click on a work<br>to acquire</span>
+    </div>
+  </div>
+
+  <div class="gallery-grid">
+
+    <!-- ITEM 1 -->
+    <div class="gallery-item reveal" onclick="openModal('Darth Vader', 'Pochoir multicouche · 8 couches · Acrylique sur toile 40×50 cm', '280', 'Composition en 8 couches. Icône SF revisitée au pochoir adhésif. Volumes construits couche après couche, du fond obscur vers la lumière du masque. Pièce unique, signée au dos.', 'Multi-layer stencil · 8 layers · Acrylic on canvas 40×50 cm', 'An 8-layer composition. A sci-fi icon reinterpreted through adhesive stencilling. Volumes built layer by layer, from the dark background to the light of the mask. Unique piece, signed on verso.')">
+      <div class="artwork-canvas">
+        <svg width="120" height="160" viewBox="0 0 120 160" fill="none">
+          <ellipse cx="60" cy="55" rx="32" ry="36" stroke="#c5a050" stroke-width="1.2"/>
+          <rect x="38" y="88" width="44" height="50" rx="2" stroke="#c5a050" stroke-width="1.2"/>
+          <line x1="20" y1="100" x2="38" y2="100" stroke="#c5a050" stroke-width="1"/>
+          <line x1="82" y1="100" x2="100" y2="100" stroke="#c5a050" stroke-width="1"/>
+          <ellipse cx="49" cy="50" rx="7" ry="5" stroke="#c5a050" stroke-width="1"/>
+          <ellipse cx="71" cy="50" rx="7" ry="5" stroke="#c5a050" stroke-width="1"/>
+          <path d="M48 68 Q60 74 72 68" stroke="#c5a050" stroke-width="1"/>
+          <path d="M40 135 L40 155 M80 135 L80 155" stroke="#c5a050" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 001</div>
+        <div class="artwork-name">Darth Vader</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 8 couches · Toile 40×50 cm</span>
+          <span data-en>8-layer stencil · Canvas 40×50 cm</span>
+        </div>
+        <div class="artwork-price">280 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ITEM 2 -->
+    <div class="gallery-item reveal reveal-delay-1" onclick="openModal('Cyborg Series #3', 'Pochoir multicouche · 7 couches · Spray sur bois recyclé 30×40 cm', '320', 'Série Hybridation — homme et machine. Bois recyclé, 7 couches, pochoir adhésif découpé à la main. Palettes métalliques et organiques mêlées. Pièce unique, signée.', 'Multi-layer stencil · 7 layers · Spray on reclaimed wood 30×40 cm', 'Hybridisation series — man and machine. Reclaimed wood, 7 layers, hand-cut adhesive stencil. Metallic and organic palettes intertwined. Unique piece, signed.')">
+      <div class="artwork-canvas">
+        <svg width="110" height="150" viewBox="0 0 110 150" fill="none">
+          <path d="M55 15 L85 35 L85 80 L55 100 L25 80 L25 35 Z" stroke="#c5a050" stroke-width="1.2"/>
+          <circle cx="55" cy="57" r="12" stroke="#c5a050" stroke-width="1.2"/>
+          <path d="M55 45 L55 30 M67 51 L80 43 M67 63 L80 71 M55 69 L55 84 M43 63 L30 71 M43 51 L30 43" stroke="#c5a050" stroke-width="0.8"/>
+          <circle cx="55" cy="57" r="4" stroke="#c5a050" stroke-width="1"/>
+          <path d="M25 80 L10 100 M85 80 L100 100" stroke="#c5a050" stroke-width="1"/>
+          <line x1="25" y1="115" x2="85" y2="115" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="35" y1="115" x2="30" y2="135" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="75" y1="115" x2="80" y2="135" stroke="#c5a050" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 002</div>
+        <div class="artwork-name">Cyborg Series #3</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 7 couches · Bois 30×40 cm</span>
+          <span data-en>7-layer stencil · Wood 30×40 cm</span>
+        </div>
+        <div class="artwork-price">320 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ITEM 3 -->
+    <div class="gallery-item reveal reveal-delay-2" onclick="openModal('Ghost Protocol', 'Pochoir 1 couche haute précision · Spray sur papier Canson 300g A2', '150', 'Œuvre en une seule couche, poussée à un niveau de détail extrême. La contrainte technique — une seule passe — amplifie la puissance graphique. Papier 300g, format A2, encadrée. Signée.', 'Single-layer high-precision stencil · Spray on Canson paper 300g A2', 'A single-layer work pushed to extreme detail. The technical constraint — one single pass — amplifies the graphic impact. 300g paper, A2 format, framed. Signed.')">
+      <div class="artwork-canvas">
+        <svg width="100" height="150" viewBox="0 0 100 150" fill="none">
+          <path d="M30 20 Q50 8 70 20 L78 70 Q64 100 50 105 Q36 100 22 70 Z" stroke="#c5a050" stroke-width="1.2"/>
+          <ellipse cx="38" cy="52" rx="7" ry="6" stroke="#c5a050" stroke-width="1"/>
+          <ellipse cx="62" cy="52" rx="7" ry="6" stroke="#c5a050" stroke-width="1"/>
+          <path d="M41 74 Q50 82 59 74" stroke="#c5a050" stroke-width="1"/>
+          <path d="M50 105 L44 128 M50 105 L56 128" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="30" y1="128" x2="70" y2="128" stroke="#c5a050" stroke-width="0.8"/>
+          <path d="M28 35 L14 28 M72 35 L86 28" stroke="#c5a050" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 003</div>
+        <div class="artwork-name">Ghost Protocol</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 1 couche · Papier A2 300g</span>
+          <span data-en>Single-layer stencil · A2 paper 300g</span>
+        </div>
+        <div class="artwork-price">150 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ITEM 4 -->
+    <div class="gallery-item reveal" onclick="openModal('Mech Samurai', 'Pochoir multicouche · 10 couches · Acrylique sur toile 50×70 cm', '350', 'La pièce phare de la série Homme-Machine. Dix couches superposées construisent un guerrier hybride — armure mécanique et chair humaine fusionnées dans un équilibre graphique parfait. Toile 50×70 cm. Pièce unique, signée.', 'Multi-layer stencil · 10 layers · Acrylic on canvas 50×70 cm', 'The flagship piece of the Man-Machine series. Ten superimposed layers build a hybrid warrior — mechanical armour and human flesh fused in perfect graphic balance. Canvas 50×70 cm. Unique piece, signed.')">
+      <div class="artwork-canvas">
+        <svg width="100" height="155" viewBox="0 0 100 155" fill="none">
+          <rect x="30" y="8" width="40" height="28" rx="2" stroke="#c5a050" stroke-width="1.2"/>
+          <rect x="22" y="36" width="56" height="42" stroke="#c5a050" stroke-width="1.2"/>
+          <rect x="8" y="40" width="14" height="28" stroke="#c5a050" stroke-width="1"/>
+          <rect x="78" y="40" width="14" height="28" stroke="#c5a050" stroke-width="1"/>
+          <rect x="30" y="78" width="18" height="24" stroke="#c5a050" stroke-width="1"/>
+          <rect x="52" y="78" width="18" height="24" stroke="#c5a050" stroke-width="1"/>
+          <rect x="28" y="102" width="20" height="32" stroke="#c5a050" stroke-width="1"/>
+          <rect x="52" y="102" width="20" height="32" stroke="#c5a050" stroke-width="1"/>
+          <line x1="35" y1="22" x2="65" y2="22" stroke="#c5a050" stroke-width="0.6"/>
+          <rect x="38" y="44" width="10" height="8" stroke="#c5a050" stroke-width="0.8"/>
+          <rect x="52" y="44" width="10" height="8" stroke="#c5a050" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 004</div>
+        <div class="artwork-name">Mech Samurai</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 10 couches · Toile 50×70 cm</span>
+          <span data-en>10-layer stencil · Canvas 50×70 cm</span>
+        </div>
+        <div class="artwork-price">350 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ITEM 5 -->
+    <div class="gallery-item reveal reveal-delay-1" onclick="openModal('Street Icon #7', 'Pochoir 1 couche · Spray sur bois peint 40×40 cm', '180', 'Pop culture revisitée. Personnage iconique traité en aplat, découpe haute précision. La simplicité apparente cache des heures de travail au cutter. Bois peint, 40×40 cm. Signé.', 'Single-layer stencil · Spray on painted wood 40×40 cm', 'Pop culture revisited. An iconic figure treated as a flat graphic, cut with high precision. The apparent simplicity conceals hours of knife work. Painted wood, 40×40 cm. Signed.')">
+      <div class="artwork-canvas">
+        <svg width="110" height="140" viewBox="0 0 110 140" fill="none">
+          <circle cx="55" cy="35" r="20" stroke="#c5a050" stroke-width="1.2"/>
+          <path d="M20 115 C20 80 90 80 90 115" stroke="#c5a050" stroke-width="1.2"/>
+          <path d="M15 65 L28 78 M95 65 L82 78" stroke="#c5a050" stroke-width="1"/>
+          <line x1="36" y1="42" x2="74" y2="42" stroke="#c5a050" stroke-width="0.6"/>
+          <circle cx="55" cy="35" r="6" stroke="#c5a050" stroke-width="0.8"/>
+          <path d="M35 120 L30 138 M75 120 L80 138" stroke="#c5a050" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 005</div>
+        <div class="artwork-name">Street Icon #7</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 1 couche · Bois 40×40 cm</span>
+          <span data-en>Single-layer stencil · Wood 40×40 cm</span>
+        </div>
+        <div class="artwork-price">180 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ITEM 6 -->
+    <div class="gallery-item reveal reveal-delay-2" onclick="openModal('Manga Series #2', 'Pochoir multicouche · 6 couches · Acrylique sur papier 300g 50×65 cm', '200', 'Inspiré de l\'iconographie manga et SF japonaise. Composition dynamique en 6 couches, équilibre entre tension et précision graphique. Papier 300g, 50×65 cm, avec passe-partout. Signée.', 'Multi-layer stencil · 6 layers · Acrylic on paper 300g 50×65 cm', 'Inspired by manga and Japanese sci-fi iconography. Dynamic 6-layer composition, balancing tension and graphic precision. 300g paper, 50×65 cm, with mat board. Signed.')">
+      <div class="artwork-canvas">
+        <svg width="120" height="150" viewBox="0 0 120 150" fill="none">
+          <polygon points="60,10 105,35 105,90 60,115 15,90 15,35" stroke="#c5a050" stroke-width="1.2"/>
+          <polygon points="60,28 88,44 88,78 60,94 32,78 32,44" stroke="#c5a050" stroke-width="0.8"/>
+          <circle cx="60" cy="61" r="12" stroke="#c5a050" stroke-width="1.2"/>
+          <circle cx="60" cy="61" r="4" stroke="#c5a050" stroke-width="1"/>
+          <line x1="60" y1="49" x2="60" y2="38" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="72" y1="55" x2="82" y2="50" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="72" y1="67" x2="82" y2="72" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="60" y1="73" x2="60" y2="84" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="48" y1="67" x2="38" y2="72" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="48" y1="55" x2="38" y2="50" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="60" y1="115" x2="42" y2="140" stroke="#c5a050" stroke-width="0.8"/>
+          <line x1="60" y1="115" x2="78" y2="140" stroke="#c5a050" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="artwork-overlay">
+        <div class="artwork-number">No. 006</div>
+        <div class="artwork-name">Manga Series #2</div>
+        <div class="artwork-technique">
+          <span data-fr>Pochoir 6 couches · Papier 50×65 cm</span>
+          <span data-en>6-layer stencil · Paper 50×65 cm</span>
+        </div>
+        <div class="artwork-price">200 €</div>
+        <button class="btn-acquire">
+          <span data-fr>Acquérir ↗</span>
+          <span data-en>Acquire ↗</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section id="process">
+  <div class="process-bg-text" data-fr>POCHOIR</div>
+  <div class="process-bg-text" data-en>STENCIL</div>
+  <div class="process-header">
+    <div>
+      <div class="artist-overline reveal">
+        <span data-fr>La technique</span>
+        <span data-en>The Technique</span>
+      </div>
+      <h2 class="section-title reveal">
+        <span data-fr>L'art de<br>la couche</span>
+        <span data-en>The art<br>of the layer</span>
+      </h2>
+    </div>
+    <p class="process-intro reveal">
+      <span data-fr>Chaque œuvre est le résultat d'un processus artisanal rigoureux. Pas d'impression, pas de reproduction — chaque pièce est conçue, découpée et peinte à la main, dans l'atelier parisien de Pierre Petit.</span>
+      <span data-en>Every work results from a rigorous artisanal process. No printing, no reproduction — each piece is conceived, cut and painted by hand, in Pierre Petit's Parisian studio.</span>
+    </p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-index">01</div>
+      <div class="step-title">
+        <span data-fr>Conception</span>
+        <span data-en>Design</span>
+      </div>
+      <p class="step-desc">
+        <span data-fr>Le visuel prend forme via Midjourney — un point de départ numérique transformé en matière par la main de l'artiste.</span>
+        <span data-en>The visual takes shape via Midjourney — a digital starting point transformed into material by the artist's hand.</span>
+      </p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-index">02</div>
+      <div class="step-title">
+        <span data-fr>Découpe</span>
+        <span data-en>Cutting</span>
+      </div>
+      <p class="step-desc">
+        <span data-fr>Découpe minutieuse au cutter des pochoirs adhésifs. Chaque couche est une matrice autonome — des heures de précision chirurgicale.</span>
+        <span data-en>Meticulous knife-cutting of adhesive stencils. Each layer is an independent matrix — hours of surgical precision.</span>
+      </p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-index">03</div>
+      <div class="step-title">
+        <span data-fr>Application</span>
+        <span data-en>Application</span>
+      </div>
+      <p class="step-desc">
+        <span data-fr>Chaque couche est appliquée successivement — repérage précis, bombe ou pinceau. Les volumes émergent couche après couche.</span>
+        <span data-en>Each layer is applied in sequence — precise alignment, spray or brush. Volumes emerge layer by layer.</span>
+      </p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-index">04</div>
+      <div class="step-title">
+        <span data-fr>Finition</span>
+        <span data-en>Finishing</span>
+      </div>
+      <p class="step-desc">
+        <span data-fr>Signature, certificat d'authenticité, conditionnement soigné. L'œuvre quitte l'atelier pour entrer dans votre espace.</span>
+        <span data-en>Signature, certificate of authenticity, careful packaging. The work leaves the studio to enter your space.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMMISSIONS ── -->
+<section id="commissions">
+  <div>
+    <div class="comm-overline reveal">
+      <span data-fr>Sur mesure</span>
+      <span data-en>Bespoke</span>
+    </div>
+    <h2 class="comm-title reveal">
+      <span data-fr>Votre vision,<br><span>son couteau.</span></span>
+      <span data-en>Your vision,<br><span>his blade.</span></span>
+    </h2>
+    <p class="comm-body reveal">
+      <span data-fr>Un personnage de votre univers, un portrait, un concept — Pierre réalise des pièces uniques sur commande. Le résultat : une œuvre conçue pour vous, exécutée avec la même rigueur que chaque pièce de la collection.</span>
+      <span data-en>A character from your universe, a portrait, a concept — Pierre creates unique pieces on commission. The result: a work conceived for you, executed with the same rigour as every piece in the collection.</span>
+    </p>
+    <a href="https://www.instagram.com/skrull.avatar/" target="_blank" class="btn btn-gold reveal">
+      <span data-fr>Commencer par Instagram ↗</span>
+      <span data-en>Start on Instagram ↗</span>
+    </a>
+  </div>
+  <div class="comm-steps reveal">
+    <div class="comm-step">
+      <div class="comm-step-n">01</div>
+      <div class="comm-step-info">
+        <div class="comm-step-title">
+          <span data-fr>Brief</span>
+          <span data-en>Brief</span>
+        </div>
+        <p class="comm-step-desc">
+          <span data-fr>Envoyez votre idée par DM Instagram — visuel de référence, format, support, budget.</span>
+          <span data-en>Send your idea via Instagram DM — reference visual, format, support, budget.</span>
+        </p>
+      </div>
+    </div>
+    <div class="comm-step">
+      <div class="comm-step-n">02</div>
+      <div class="comm-step-info">
+        <div class="comm-step-title">
+          <span data-fr>Conception & devis</span>
+          <span data-en>Design & quote</span>
+        </div>
+        <p class="comm-step-desc">
+          <span data-fr>Pierre conçoit le visuel et vous soumet un devis détaillé avant toute chose.</span>
+          <span data-en>Pierre designs the visual and submits a detailed quote before anything begins.</span>
+        </p>
+      </div>
+    </div>
+    <div class="comm-step">
+      <div class="comm-step-n">03</div>
+      <div class="comm-step-info">
+        <div class="comm-step-title">
+          <span data-fr>Réalisation</span>
+          <span data-en>Creation</span>
+        </div>
+        <p class="comm-step-desc">
+          <span data-fr>Découpe, application, finitions. Comptez 2 à 4 semaines selon la complexité.</span>
+          <span data-en>Cutting, application, finishing. Allow 2 to 4 weeks depending on complexity.</span>
+        </p>
+      </div>
+    </div>
+    <div class="comm-step">
+      <div class="comm-step-n">04</div>
+      <div class="comm-step-info">
+        <div class="comm-step-title">
+          <span data-fr>Livraison</span>
+          <span data-en>Delivery</span>
+        </div>
+        <p class="comm-step-desc">
+          <span data-fr>Pièce signée, certifiée, livrée en France et à l'international. Paiement PayPal sécurisé.</span>
+          <span data-en>Signed, certified piece delivered in France and internationally. Secure PayPal payment.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SHOP ── -->
+<section id="shop">
+  <div class="shop-ambient"></div>
+  <div class="shop-bg-word" data-fr>ACQUÉRIR</div>
+  <div class="shop-bg-word" data-en>ACQUIRE</div>
+  <div class="shop-content">
+    <p class="shop-overline reveal">
+      <span data-fr>— Acquérir une œuvre originale</span>
+      <span data-en>— Acquire an original work</span>
+    </p>
+    <h2 class="shop-title reveal">
+      <span data-fr>Votre<br><span class="dim">prochaine</span><br>pièce.</span>
+      <span data-en>Your<br><span class="dim">next</span><br>piece.</span>
+    </h2>
+    <p class="shop-serif reveal">
+      <span data-fr>Chaque acquisition est accompagnée d'un certificat d'authenticité signé par l'artiste. Livraison soignée en France et à l'international. Des questions ? Un DM Instagram suffit.</span>
+      <span data-en>Every acquisition comes with a certificate of authenticity signed by the artist. Careful delivery in France and internationally. Questions? A single Instagram DM suffices.</span>
+    </p>
+
+    <div class="shop-paypal-wrap reveal">
+      <p class="paypal-label">
+        <span data-fr>Paiement sécurisé · PayPal</span>
+        <span data-en>Secure payment · PayPal</span>
+      </p>
+      <!-- ═══════════════════════════════════════════════════════════════
+           INSTRUCTIONS PAYPAL (à faire avant de mettre en ligne) :
+           1. Connectez-vous sur paypal.com/fr
+           2. Outils → Boutons PayPal → Créer un bouton
+           3. OU remplacez simplement VOTRE_EMAIL_PAYPAL@email.com
+              par l'adresse email de votre compte PayPal ci-dessous.
+           ═══════════════════════════════════════════════════════════════ -->
+      <div class="paypal-frame">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+          <input type="hidden" name="cmd" value="_xclick">
+          <input type="hidden" name="business" value="VOTRE_EMAIL_PAYPAL@email.com">
+          <input type="hidden" name="currency_code" value="EUR">
+          <input type="hidden" name="item_name" id="pp-item" value="Œuvre originale — Skrull Avatar">
+          <input type="hidden" name="amount" id="pp-amount" value="0">
+          <input type="hidden" name="lc" value="FR">
+          <button type="submit" class="btn btn-gold" style="font-size:0.75rem; padding:1.1rem 3rem;">
+            <span data-fr>Payer via PayPal ↗</span>
+            <span data-en>Pay via PayPal ↗</span>
+          </button>
+        </form>
+      </div>
+      <p class="paypal-warning">
+        ⚠ <span data-fr>Remplacez VOTRE_EMAIL_PAYPAL@email.com avant de publier</span>
+           <span data-en>Replace VOTRE_EMAIL_PAYPAL@email.com before publishing</span>
+      </p>
+    </div>
+
+    <div class="shop-contacts reveal">
+      <a href="https://www.instagram.com/skrull.avatar/" target="_blank" class="contact-link">
+        <span data-fr>Instagram · DM pour commandes</span>
+        <span data-en>Instagram · DM for commissions</span>
+      </a>
+      <a href="mailto:VOTRE_EMAIL@email.com" class="contact-link">
+        <span data-fr>Email direct</span>
+        <span data-en>Direct email</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-brand">Skrull Avatar</span>
+  <span class="footer-copy">
+    <span data-fr>© 2025 Pierre Petit · Tous droits réservés · Paris</span>
+    <span data-en>© 2025 Pierre Petit · All rights reserved · Paris</span>
+  </span>
+</footer>
+
+<!-- ── MODAL ── -->
+<div class="modal-backdrop" id="modal" onclick="handleBackdropClick(event)">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal()">
+      <span data-fr>Fermer ✕</span>
+      <span data-en>Close ✕</span>
+    </button>
+    <div class="modal-artwork-label" id="m-num">No. 001</div>
+    <h3 class="modal-artwork-name" id="m-name">—</h3>
+    <p class="modal-technique" id="m-tech">—</p>
+    <p class="modal-description" id="m-desc">—</p>
+    <div class="modal-price" id="m-price">—</div>
+    <hr class="modal-rule">
+    <p class="modal-pp-label">
+      <span data-fr>Paiement sécurisé PayPal</span>
+      <span data-en>Secure PayPal payment</span>
+    </p>
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="VOTRE_EMAIL_PAYPAL@email.com">
+      <input type="hidden" name="currency_code" value="EUR">
+      <input type="hidden" name="item_name" id="m-pp-item" value="">
+      <input type="hidden" name="amount" id="m-pp-amount" value="0">
+      <input type="hidden" name="lc" value="FR">
+      <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;font-size:0.72rem;">
+        <span data-fr>Acquérir cette œuvre via PayPal ↗</span>
+        <span data-en>Acquire this work via PayPal ↗</span>
+      </button>
+    </form>
+    <p class="modal-note">
+      <span data-fr>Livraison sous 5–10 jours ouvrés · Certificat d'authenticité inclus · Emballage soigné</span>
+      <span data-en>Delivery within 5–10 working days · Certificate of authenticity included · Careful packaging</span>
+    </p>
+  </div>
+</div>
+
+<script>
+// ── CURSOR
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+animRing();
+
+// ── LANGUAGE
+function setLang(l){
+  document.documentElement.setAttribute('data-lang',l);
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===l));
+}
+
+// ── SCROLL REVEAL
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }});
+},{threshold:0.12});
+revealEls.forEach(el=>io.observe(el));
+
+// ── MODAL
+let currentLang = () => document.documentElement.getAttribute('data-lang') || 'fr';
+
+function openModal(nameFR, techFR, price, descFR, techEN, descEN){
+  const lang = currentLang();
+  document.getElementById('m-name').textContent = nameFR;
+  document.getElementById('m-tech').textContent = lang==='fr' ? techFR : techEN;
+  document.getElementById('m-desc').textContent = lang==='fr' ? descFR : descEN;
+  document.getElementById('m-price').textContent = price + ' €';
+  document.getElementById('m-pp-item').value = nameFR + ' — Skrull Avatar';
+  document.getElementById('m-pp-amount').value = price;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function handleBackdropClick(e){
+  if(e.target===document.getElementById('modal')) closeModal();
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
